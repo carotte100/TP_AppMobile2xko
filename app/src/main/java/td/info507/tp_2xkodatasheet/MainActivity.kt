@@ -17,6 +17,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.fontResource
 import androidx.compose.ui.unit.dp
 import td.info507.tp_2xkodatasheet.ui.theme.TP_2XKOdatasheetTheme
@@ -27,8 +28,15 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             TP_2XKOdatasheetTheme {
-                searchBar()
-                characterList()
+                Box(
+                    modifier = Modifier
+                        .background(colorResource(id = R.color.noir))
+                ) {
+                    Column {
+                        searchBar()
+                        characterList()
+                    }
+                }
             }
         }
     }
