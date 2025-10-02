@@ -3,6 +3,8 @@ package td.info507.tp_2xkodatasheet
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
 import td.info507.tp_2xkodatasheet.ui.theme.TP_2XKOdatasheetTheme
 
@@ -20,5 +22,12 @@ class PageCharacter : ComponentActivity() {
 @Composable
 fun AffichePerso(/*Nom: String*/)
 {
+    Box{
+        Row() {
 
+        }
+        Row(){
+
+        }
+    }
 }
