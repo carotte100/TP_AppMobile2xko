@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,6 +32,7 @@ class MainActivity : ComponentActivity() {
             TP_2XKOdatasheetTheme {
                 Box(
                     modifier = Modifier
+                        .fillMaxHeight()
                         .background(colorResource(id = R.color.noir))
                 ) {
                     Column {
@@ -54,12 +57,14 @@ fun searchBar() {
         Column(
             modifier = Modifier
                 .padding(8.dp)
+                .background(colorResource(R.color.vert))
         ) {
             Text("filtre")
         }
         Column (
             modifier = Modifier
                 .padding(8.dp)
+                .background(colorResource(R.color.vert))
         ) {
             Text("barre de recherche")
         }
@@ -68,13 +73,14 @@ fun searchBar() {
 
 @Composable
 fun characterList() {
-    Row {
-        val tab = intArrayOf(1, 2, 3)
+    Column {
+        val tab = intArrayOf(0, 1, 2, 3)
         val listChar = PageCharacter()
 
         for (i in tab) {
             Box(
                 modifier = Modifier
+                    .fillMaxWidth()
                     .padding(16.dp)
                     .background(Color.Yellow)
                     .clickable { listChar.ShowCharacter() }
@@ -90,3 +96,4 @@ fun characterList() {
         }
     }
 }
+
