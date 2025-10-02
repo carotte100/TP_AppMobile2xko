@@ -92,7 +92,7 @@ fun characterList() {
                         color = colorResource(R.color.violet),
                         shape = RoundedCornerShape(30.dp)
                     )
-                    .clickable { listChar.ShowCharacter(i) }
+                    .clickable { /*listChar.ShowCharacter(i)*/ }
                     .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
