@@ -13,8 +13,10 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -54,43 +56,69 @@ fun searchBar() {
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Column(
-            modifier = Modifier
-                .padding(8.dp)
-                .background(colorResource(R.color.vert))
-        ) {
-            Text("filtre")
-        }
         Column (
             modifier = Modifier
-                .padding(8.dp)
-                .background(colorResource(R.color.vert))
+                .padding(8.dp),
+
         ) {
-            Text("barre de recherche")
+            TextField("Barre de recherche", {}, shape = RoundedCornerShape(50.dp))
+        }
+        Column() {
+            Button(
+                onClick = {},
+                shape = RoundedCornerShape(50)
+            ) {
+                Text("Img")
+            }
+
         }
     }
 }
 
 @Composable
 fun characterList() {
-    Column {
-        val tab = intArrayOf(0, 1, 2, 3)
-        val listChar = PageCharacter()
+    val tab = listOf("Blitzcrank", "Ahri", "Illaoi", "Braum")
+    val listChar = PageCharacter()
 
+    Column(
+        modifier = Modifier.padding(8.dp)
+    ) {
         for (i in tab) {
-            Box(
+            Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(16.dp)
-                    .background(Color.Yellow)
-                    .clickable { listChar.ShowCharacter() }
-                    .padding(16.dp)
+                    .padding(vertical = 8.dp)
+                    .background(
+                        color = colorResource(R.color.violet),
+                        shape = RoundedCornerShape(30.dp)
+                    )
+                    .clickable { listChar.ShowCharacter(i) }
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally
+                // Partie gauche : Nom
+                Text(
+                    text = i,
+                    color = Color.Black,
+                    modifier = Modifier
+                        .background(
+                            color = colorResource(R.color.vert),
+                            shape = RoundedCornerShape(50)
+                        )
+                        .padding(horizontal = 30.dp, vertical = 20.dp)
+                )
+
+                // Partie droite : Image
+                Box(
+                    modifier = Modifier
+                        .background(
+                            color = Color.LightGray,
+                            shape = RoundedCornerShape(50)
+                        )
+                        .padding(20.dp)
                 ) {
-                    Text("Nom du perso $i")
-                    Text("Image du perso $i")
+                    Text("😊")
                 }
             }
         }
