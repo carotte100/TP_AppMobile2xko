@@ -24,6 +24,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.fontResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import td.info507.tp_2xkodatasheet.ui.theme.TP_2XKOdatasheetTheme
 
 
@@ -61,7 +63,7 @@ fun searchBar() {
                 .padding(8.dp),
 
         ) {
-            TextField("Barre de recherche", {}, shape = RoundedCornerShape(50.dp))
+            TextField("", {}, shape = RoundedCornerShape(50.dp))
         }
         Column() {
             Button(
@@ -77,13 +79,12 @@ fun searchBar() {
 
 @Composable
 fun characterList() {
-    val tab = listOf("Blitzcrank", "Ahri", "Illaoi", "Braum")
-    val listChar = PageCharacter()
+    val tab = listOf("Blitzcrank", "Ahri", "Illaoi", "Braum", "Darius", "Teemo", "Yasuo", "Vi", "Jinx", "Ekko")
 
-    Column(
+    LazyColumn(
         modifier = Modifier.padding(8.dp)
     ) {
-        for (i in tab) {
+        items(tab) { i ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -97,7 +98,6 @@ fun characterList() {
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                // Partie gauche : Nom
                 Text(
                     text = i,
                     color = Color.Black,
@@ -108,8 +108,6 @@ fun characterList() {
                         )
                         .padding(horizontal = 30.dp, vertical = 20.dp)
                 )
-
-                // Partie droite : Image
                 Box(
                     modifier = Modifier
                         .background(
@@ -124,4 +122,3 @@ fun characterList() {
         }
     }
 }
-
