@@ -16,12 +16,12 @@ import td.info507.tp_2xkodatasheet.storage.utility.file.JSONFileStorage
         return Champion(nom, obj.description, obj.lCoup, obj.lCombo)
     }
 
-    override fun objectToJson(nom: String, champion: Champion): JSONObject {
+    override fun objectToJson(nom: String, obj: Champion): JSONObject {
         val json = JSONObject()
-        json.put("Nom", champion.nom)
-        json.put("Description",descriptionToJson(champion.description))
-        json.put("ListeCoup", listeCoupToJson(champion.lCoup))
-        json.put("ListeCombo", listeComboToJson(champion.lCombo))
+        json.put("Nom", obj.nom)
+        json.put("Description",descriptionToJson(obj.description))
+        json.put("ListeCoup", listeCoupToJson(obj.lCoup))
+        json.put("ListeCombo", listeComboToJson(obj.lCombo))
         return json
     }
 
