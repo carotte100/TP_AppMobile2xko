@@ -2,6 +2,7 @@ package td.info507.tp_2xkodatasheet.storage.utility.file
 
 import android.content.Context
 import org.json.JSONObject
+import td.info507.tp_2xkodatasheet.model.Champion
 
 abstract class JSONFileStorage<T>(context: Context, name: String) :
     FileStorage<T>(context, name, "json") {

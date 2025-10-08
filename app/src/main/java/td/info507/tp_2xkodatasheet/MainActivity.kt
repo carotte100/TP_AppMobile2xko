@@ -1,6 +1,7 @@
 package td.info507.tp_2xkodatasheet
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -26,12 +27,29 @@ import androidx.compose.ui.res.fontResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import td.info507.tp_2xkodatasheet.storage.ChampionJSonFileStorage
 import td.info507.tp_2xkodatasheet.ui.theme.TP_2XKOdatasheetTheme
+import td.info507.tp_2xkodatasheet.utils.loadJsonFromAssets
+import td.info507.tp_2xkodatasheet.utils.readJsonFromAssets
 
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val jsonString = loadJsonFromAssets(this, "2XKO.json")
+
+
+        Log.d("JSON_TEST", jsonString)
+
+        val storage = ChampionJSonFileStorage(this)
+        val champions = storage.loadFromJsonString(jsonString)
+
+        println("Nombre de champions : ${champions.size}")
+        champions.forEach { (nom, champion) ->
+            println("Champion : $nom -> ${champion.description.description}")
+        }
+
         setContent {
             TP_2XKOdatasheetTheme {
                 Box(

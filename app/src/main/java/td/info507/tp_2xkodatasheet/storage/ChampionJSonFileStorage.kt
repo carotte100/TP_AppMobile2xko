@@ -104,23 +104,24 @@ import td.info507.tp_2xkodatasheet.storage.utility.file.JSONFileStorage
 
     fun jsonToListeCoup(json: JSONArray): ListeCoup{
         val lcoup = mutableListOf<Coup>()
-        repeat(json.length()) { coup ->
-            val coupArray = json.getJSONObject(coup)
-            lcoup.add(jsonToCoup(coupArray))
+        repeat(json.length()) { coups ->
+            val coupArray = json.getJSONObject(coups)
+            val coup = coupArray.getJSONObject("Coup")
+            lcoup.add(jsonToCoup(coup))
         }
         return ListeCoup(lcoup)
     }
 
     fun jsonToCoup(json: JSONObject): Coup{
         val icones = mutableListOf<String>()
-        val iconeArray = json.getJSONArray("Icone")
+        val iconeArray = json.getJSONArray("Icone") ?: JSONArray()
         repeat( iconeArray.length()){ icone ->
             icones.add(iconeArray.getString(icone))
         }
 
         val fData = mutableListOf<String>()
-        val fDataArray = json.getJSONArray("FrameData")
-        repeat( iconeArray.length()){ data ->
+        val fDataArray = json.getJSONArray("FrameData") ?: JSONArray()
+        repeat( fDataArray.length()){ data ->
             fData.add(fDataArray.getString(data))
         }
         return Coup(
@@ -131,4 +132,10 @@ import td.info507.tp_2xkodatasheet.storage.utility.file.JSONFileStorage
             fData
         )
     }
+
+
+        fun loadFromJsonString(jsonString: String): Map<String, Champion> {
+            return stringToData(jsonString)  // accessible ici car tu es dans la sous-classe
+        }
+
 }
