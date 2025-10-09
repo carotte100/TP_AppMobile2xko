@@ -1,0 +1,51 @@
+{
+    "Ahri":{ 
+        "Nom":"Ahri",
+        "Description" : {
+            "Description":"Ahri est une mystérieuse Vastaya aux traits de renard qui peut manipuler les émotions de sa proie et consumer son essence. C'est une mage très mobile disposant de nombreux outils pour mettre ses ennemis sous pression.",
+            "Video":"https://youtu.be/EOr6cnybcPg?si=TK__c6bNDTb12Ttj"
+            }
+      ,
+      "ListeCoup": [
+                  {"Coup":
+                        {
+                            "Type": "Exclusivités",
+                            "Nom":"Tir étincelant", 
+                            "Description": "Une attaque aérienne rapide qui peut toucher l'ennemi de n'importe quel côté.",
+                            "Icone": ["down","light"],
+                            "FrameData":["3","5","10"]
+                        }
+                  }
+      
+    ],
+      "ListeCombo":[
+            ["light","medium","heavy"],
+            ["down","plus","heavy","medium","heavy","s2"]
+        ]
+}
+,      "Illaoi":{ 
+        "Nom":"Illaoi",
+        "Description" : {
+            "Description":"Apôtre de la vérité de Nagakabouros, Illaoi se sert d'une énorme idole dorée pour mettre à l'épreuve la volonté de ses ennemis et invoquer des tentacules spectraux pour se battre à ses côtés. C'est une bagarreuse qui inflige de lourds dégâts et qui soumet ses ennemis à une pression aussi intense que sa foi.",
+            "Video":"https://youtu.be/qZWu8nA45ko?si=Qyr599KgKgzZDqsk"
+            }
+      ,
+      "ListeCoup": [
+                  {"Coup":
+                        {
+                            "Type": "Attaques spéciales",
+                            "Nom":"Frappe tentaculaire", 
+                            "Description": "Attaque en mouvement vers l'avant. À l'impact, elle invoque un tentacule.",
+                            "Icone": ["s2"],
+                            "FrameData":["7","9","13"]
+                        }
+                  }
+      
+    ],
+      "ListeCombo":[
+            ["s1","s1","s1","s1","plus","paranthèse ouvrante","light","or","medium","heavy","paranthèse fermer"],
+            ["medium","heavy","down","plus","s2","medium","heavy","s2","s1","plus","s3"]
+        ]
+      
+    }
+    }
