@@ -28,6 +28,12 @@ import androidx.compose.ui.res.fontResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.runtime.mutableStateOf
+import com.android.volley.Request
+import com.android.volley.RequestQueue
+import com.android.volley.toolbox.JsonObjectRequest
+import com.android.volley.toolbox.Volley
+import org.json.JSONObject
 import td.info507.tp_2xkodatasheet.model.Champion
 import td.info507.tp_2xkodatasheet.storage.ChampionJSonFileStorage
 import td.info507.tp_2xkodatasheet.storage.ChampionStorage
@@ -37,14 +43,30 @@ import td.info507.tp_2xkodatasheet.utils.readJsonFromAssets
 
 
 class MainActivity : ComponentActivity() {
+    private val jsonUrl = "http://51.68.91.213/gr-2-3/2XKO.json"
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val jsonString = loadJsonFromAssets(this, "2XKO.json")  //Récupère le fichier json
+        val storage = ChampionJSonFileStorage(this)
+        val championsState = mutableStateOf<List<Champion>>(emptyList())
 
-        val storage = ChampionJSonFileStorage(this) //Instance un truc
-        val champions = storage.loadFromJsonString(jsonString) //Met la liste d'objet chaampion
 
+        // Récupération du JSON depuis le serveur
+        fetch2XKOJson(jsonUrl) { json ->
+            json?.let {
+                val champions = mutableListOf<Champion>()
+                val keys = it.keys()
+                while (keys.hasNext()) {
+                    val key = keys.next()
+                    val championJson = it.getJSONObject(key)
+                    val champion = storage.jsonToObject(championJson)
+                    champions.add(champion)
+                }
+                championsState.value = champions
+                Log.d("Volley", "Champions chargés : ${champions.map { c -> c.nom }}")
+            }
+        }
 
         setContent {
             TP_2XKOdatasheetTheme {
@@ -55,11 +77,24 @@ class MainActivity : ComponentActivity() {
                 ) {
                     Column {
                         searchBar()
-                        characterList()
+                        characterList(championsState.value)
                     }
                 }
             }
         }
+    }
+
+    private fun fetch2XKOJson(url: String, onResult: (JSONObject?) -> Unit) {
+        val queue: RequestQueue = Volley.newRequestQueue(this)
+        val request = JsonObjectRequest(
+            Request.Method.GET, url, null,
+            { response -> onResult(response) },
+            { error ->
+                error.printStackTrace()
+                onResult(null)
+            }
+        )
+        queue.add(request)
     }
 }
 
@@ -92,13 +127,11 @@ fun searchBar() {
 }
 
 @Composable
-fun characterList() {
-    val tab = listOf("Blitzcrank", "Ahri", "Illaoi", "Braum", "Darius", "Teemo", "Yasuo", "Vi", "Jinx", "Ekko", "Warwick")
-
+fun characterList(champions: List<Champion>) {
     LazyColumn(
         modifier = Modifier.padding(8.dp)
     ) {
-        items(tab) { i ->
+        items(champions) { champion ->
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -107,13 +140,13 @@ fun characterList() {
                         color = colorResource(R.color.violet),
                         shape = RoundedCornerShape(30.dp)
                     )
-                    .clickable { /*listChar.ShowCharacter(i)*/ }
+                    .clickable {  }
                     .padding(16.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
-                    text = i,
+                    text = champion.nom,
                     color = Color.Black,
                     modifier = Modifier
                         .background(

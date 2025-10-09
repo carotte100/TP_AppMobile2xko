@@ -73,7 +73,7 @@ import td.info507.tp_2xkodatasheet.storage.utility.file.JSONFileStorage
     }
 
 
-    override fun jsonToObject(json: JSONObject): Champion {
+    public override fun jsonToObject(json: JSONObject): Champion {
         return Champion(
             json.getString("Nom"),
             jsonToDescription(json.getJSONObject("Description")),
