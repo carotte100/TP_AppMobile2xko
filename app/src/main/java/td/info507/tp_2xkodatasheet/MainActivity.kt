@@ -1,5 +1,6 @@
 package td.info507.tp_2xkodatasheet
 
+import android.nfc.Tag
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -27,7 +28,9 @@ import androidx.compose.ui.res.fontResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import td.info507.tp_2xkodatasheet.model.Champion
 import td.info507.tp_2xkodatasheet.storage.ChampionJSonFileStorage
+import td.info507.tp_2xkodatasheet.storage.ChampionStorage
 import td.info507.tp_2xkodatasheet.ui.theme.TP_2XKOdatasheetTheme
 import td.info507.tp_2xkodatasheet.utils.loadJsonFromAssets
 import td.info507.tp_2xkodatasheet.utils.readJsonFromAssets
@@ -37,18 +40,11 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val jsonString = loadJsonFromAssets(this, "2XKO.json")
+        val jsonString = loadJsonFromAssets(this, "2XKO.json")  //Récupère le fichier json
 
+        val storage = ChampionJSonFileStorage(this) //Instance un truc
+        val champions = storage.loadFromJsonString(jsonString) //Met la liste d'objet chaampion
 
-        Log.d("JSON_TEST", jsonString)
-
-        val storage = ChampionJSonFileStorage(this)
-        val champions = storage.loadFromJsonString(jsonString)
-
-        println("Nombre de champions : ${champions.size}")
-        champions.forEach { (nom, champion) ->
-            println("Champion : $nom -> ${champion.description.description}")
-        }
 
         setContent {
             TP_2XKOdatasheetTheme {
@@ -80,7 +76,7 @@ fun searchBar() {
             modifier = Modifier
                 .padding(8.dp),
 
-        ) {
+            ) {
             TextField("", {}, shape = RoundedCornerShape(50.dp))
         }
         Column() {
@@ -97,7 +93,7 @@ fun searchBar() {
 
 @Composable
 fun characterList() {
-    val tab = listOf("Blitzcrank", "Ahri", "Illaoi", "Braum", "Darius", "Teemo", "Yasuo", "Vi", "Jinx", "Ekko")
+    val tab = listOf("Blitzcrank", "Ahri", "Illaoi", "Braum", "Darius", "Teemo", "Yasuo", "Vi", "Jinx", "Ekko", "Warwick")
 
     LazyColumn(
         modifier = Modifier.padding(8.dp)
