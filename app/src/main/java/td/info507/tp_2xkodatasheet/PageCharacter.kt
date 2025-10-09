@@ -5,8 +5,13 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.navigation.compose.rememberNavController
 import td.info507.tp_2xkodatasheet.ui.theme.TP_2XKOdatasheetTheme
+import td.info507.tp_2xkodatasheet.utils.DepliantDescr
 
 class PageCharacter : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,12 +27,20 @@ class PageCharacter : ComponentActivity() {
 @Composable
 fun AffichePerso(/*Nom: String*/)
 {
+    val navController = rememberNavController()
     Box{
         Row() {
-
+            Text("image")
+            Button(onClick = {navController.popBackStack()}) {
+                Text("bouton retour")
+            }
         }
         Row(){
+            Box() {
+                DepliantDescr(modifier = Modifier)
 
+            }
         }
     }
 }
+
