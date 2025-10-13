@@ -18,7 +18,7 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTube
 import td.info507.tp_2xkodatasheet.model.Champion
 
 @Composable
-fun DepliantDescr(modifier: Modifier, champion: Champion) {
+fun DepliantCombo(modifier: Modifier, champion: Champion) {
     var isOpen by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
