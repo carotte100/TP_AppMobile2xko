@@ -25,6 +25,7 @@ import td.info507.tp_2xkodatasheet.model.Champion
 import td.info507.tp_2xkodatasheet.ui.theme.TP_2XKOdatasheetTheme
 import td.info507.tp_2xkodatasheet.utils.DepliantCoup
 import td.info507.tp_2xkodatasheet.utils.DepliantDescr
+import td.info507.tp_2xkodatasheet.utils.DepliantCombo
 
 @Composable
 fun PageCharacter(champion: Champion, onBack: () -> Unit) {
@@ -48,6 +49,7 @@ fun PageCharacter(champion: Champion, onBack: () -> Unit) {
         Spacer(Modifier.height(12.dp))
         DepliantDescr(modifier = Modifier, champion = champion)
         DepliantCoup(modifier = Modifier, champion = champion)
+        DepliantCombo(modifier = Modifier, champion = champion)
 
         Spacer(Modifier.height(20.dp))
         Text(text = "Coups :", color = Color.White)
