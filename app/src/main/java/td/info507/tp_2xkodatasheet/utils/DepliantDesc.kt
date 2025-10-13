@@ -15,9 +15,10 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+import td.info507.tp_2xkodatasheet.model.Champion
 
 @Composable
-fun DepliantDescr(modifier: Modifier) {
+fun DepliantDescr(modifier: Modifier, champion: Champion) {
     var isOpen by remember { mutableStateOf(false) }
     val context = LocalContext.current
 
@@ -42,7 +43,7 @@ fun DepliantDescr(modifier: Modifier) {
                     .padding(12.dp)
             ) {
                 Text(
-                    text = "Equitis Romani autem esse filium criminis loco poni ab accusatoribus neque his iudicantibus oportuit neque defendentibus nobis.",
+                    text = champion.description.description,
                     color = Color.White,
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
@@ -53,7 +54,7 @@ fun DepliantDescr(modifier: Modifier) {
                             enableAutomaticInitialization = false
                             addYouTubePlayerListener(object : AbstractYouTubePlayerListener() {
                                 override fun onReady(youTubePlayer: YouTubePlayer) {
-                                    youTubePlayer.loadVideo("dQw4w9WgXcQ", 0f)
+                                    youTubePlayer.loadVideo(champion.description.video, 0f)
                                 }
                             })
                         }
