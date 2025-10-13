@@ -1,5 +1,6 @@
 package td.info507.tp_2xkodatasheet
 
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -110,6 +111,7 @@ fun CharacterListScreen(champions: List<Champion>, navController: NavController)
 
 @Composable
 fun SearchBar() {
+    val context = LocalContext.current
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -123,7 +125,10 @@ fun SearchBar() {
             TextField(value = "", onValueChange = {}, shape = RoundedCornerShape(50.dp))
         }
         Column {
-            Button(onClick = {}, shape = RoundedCornerShape(50)) {
+            Button(onClick = {
+                val intent = Intent(context, ProfileActivity::class.java)
+                context.startActivity(intent)
+            }, shape = RoundedCornerShape(50)) {
                 Text("Img")
             }
         }
