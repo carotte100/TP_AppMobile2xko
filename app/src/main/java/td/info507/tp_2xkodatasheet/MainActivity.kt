@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -17,9 +18,12 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavType
@@ -103,7 +107,11 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun CharacterListScreen(champions: List<Champion>, navController: NavController) {
-    Column {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(colorResource(R.color.noir))
+    ) {
         SearchBar()
         CharacterList(champions = champions, navController = navController)
     }
@@ -137,10 +145,15 @@ fun SearchBar() {
 
 @Composable
 fun CharacterList(champions: List<Champion>, navController: NavController) {
+    val context = LocalContext.current // On récupère le context ici pour charger les images
+
     LazyColumn(
         modifier = Modifier.padding(8.dp)
     ) {
         items(champions) { champion ->
+            val imgName = champion.nom.lowercase()
+            val imgResId = context.resources.getIdentifier(imgName, "drawable", context.packageName)
+
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -150,32 +163,45 @@ fun CharacterList(champions: List<Champion>, navController: NavController) {
                         shape = RoundedCornerShape(30.dp)
                     )
                     .clickable {
-                        // Navigation vers la page du champion
+                        // Page de champion
                         navController.navigate("details/${champion.nom}")
                     }
-                    .padding(16.dp),
+                    .padding(8.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.Start
             ) {
+                // GAUCHE
                 Text(
                     text = champion.nom,
                     color = Color.Black,
                     modifier = Modifier
                         .background(
                             color = colorResource(R.color.vert),
-                            shape = RoundedCornerShape(50)
+                            shape = RoundedCornerShape(50.dp)
                         )
-                        .padding(horizontal = 30.dp, vertical = 20.dp)
+                        .padding(horizontal = 24.dp, vertical = 16.dp)
                 )
+
+                // pousse a droite
+                Spacer(modifier = Modifier.weight(1f))
+
+                // DROITE
                 Box(
                     modifier = Modifier
+                        .size(65.dp)
                         .background(
                             color = Color.LightGray,
-                            shape = RoundedCornerShape(50)
+                            shape = RoundedCornerShape(50.dp)
                         )
-                        .padding(20.dp)
+                        .clip(RoundedCornerShape(50.dp))
                 ) {
-                    Text("😊")
+
+                    Image(
+                        painter = painterResource(id = imgResId),
+                        contentDescription = "Image de ${champion.nom}",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier.fillMaxSize()
+                    )
                 }
             }
         }
