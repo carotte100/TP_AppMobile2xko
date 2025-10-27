@@ -16,6 +16,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -107,18 +109,34 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun CharacterListScreen(champions: List<Champion>, navController: NavController) {
+    var searchText by remember { mutableStateOf("") }
+
+    val filteredChampions = if (searchText.isBlank()) {
+        champions
+    } else {
+        champions.filter { champion ->
+            champion.nom.contains(searchText, ignoreCase = true)
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(colorResource(R.color.noir))
     ) {
-        SearchBar()
-        CharacterList(champions = champions, navController = navController)
+        SearchBar(
+            searchValue = searchText,
+            onValueChange = { newText ->
+                searchText = newText
+            }
+        )
+        CharacterList(champions = filteredChampions, navController = navController)
     }
 }
 
+
 @Composable
-fun SearchBar() {
+fun SearchBar(searchValue: String, onValueChange: (String) -> Unit) {
     val context = LocalContext.current
     Row(
         modifier = Modifier
@@ -130,7 +148,11 @@ fun SearchBar() {
         Column(
             modifier = Modifier.padding(8.dp)
         ) {
-            TextField(value = "", onValueChange = {}, shape = RoundedCornerShape(50.dp))
+            TextField(
+                value = searchValue,
+                onValueChange = onValueChange,
+                shape = RoundedCornerShape(50.dp)
+            )
         }
         Column {
             Button(onClick = {
