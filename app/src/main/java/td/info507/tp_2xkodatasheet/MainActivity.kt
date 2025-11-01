@@ -37,11 +37,11 @@ import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
+import com.google.gson.Gson
 import org.json.JSONObject
 import td.info507.tp_2xkodatasheet.model.Champion
 import td.info507.tp_2xkodatasheet.storage.ChampionJSonFileStorage
 import td.info507.tp_2xkodatasheet.ui.theme.TP_2XKOdatasheetTheme
-import td.info507.tp_2xkodatasheet.utils.DepliantDescr
 
 class MainActivity : ComponentActivity() {
     private val jsonUrl = "http://51.68.91.213/gr-2-3/2XKO.json"
@@ -126,6 +126,7 @@ fun CharacterListScreen(champions: List<Champion>, navController: NavController)
     ) {
         SearchBar(
             searchValue = searchText,
+            champions,
             onValueChange = { newText ->
                 searchText = newText
             }
@@ -136,7 +137,7 @@ fun CharacterListScreen(champions: List<Champion>, navController: NavController)
 
 
 @Composable
-fun SearchBar(searchValue: String, onValueChange: (String) -> Unit) {
+fun SearchBar(searchValue: String,champions: List<Champion>, onValueChange: (String) -> Unit) {
     val context = LocalContext.current
     Row(
         modifier = Modifier
@@ -157,6 +158,9 @@ fun SearchBar(searchValue: String, onValueChange: (String) -> Unit) {
         Column {
             Button(onClick = {
                 val intent = Intent(context, ProfileActivity::class.java)
+                val gson = Gson()
+                val json = gson.toJson(champions) // ici, champions est ta liste complète ou tes favoris
+                intent.putExtra("champions_json", json)
                 context.startActivity(intent)
             }, shape = RoundedCornerShape(50)) {
                 Text("Img")
