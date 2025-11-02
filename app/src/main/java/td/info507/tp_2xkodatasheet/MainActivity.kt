@@ -179,7 +179,10 @@ fun SearchBar(searchValue: String, onValueChange: (String) -> Unit) {
                 intent.putExtra("champions_json", json.toString())
                 context.startActivity(intent)
             }, shape = RoundedCornerShape(50)) {
-                Text("Img")
+                Image(
+                    painter = painterResource(R.drawable.user),
+                    contentDescription = "Profile",
+                )
             }
         }
     }
