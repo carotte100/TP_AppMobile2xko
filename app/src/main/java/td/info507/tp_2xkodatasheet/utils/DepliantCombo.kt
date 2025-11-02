@@ -71,7 +71,7 @@ fun DepliantCombo(modifier: Modifier, champion: Champion) {
                         combo.forEachIndexed { index, comboPart ->
                             if (index > 0) {
                                 Text(
-                                    text = "→",
+                                    text = "->",
                                     color = Color.White,
                                     modifier = Modifier.padding(horizontal = 4.dp)
                                 )
