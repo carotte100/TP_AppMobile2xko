@@ -11,7 +11,7 @@ import td.info507.tp_2xkodatasheet.model.ListeCoup
 import td.info507.tp_2xkodatasheet.storage.utility.file.JSONFileStorage
 
 
-    class ChampionJSonFileStorage (context: Context) : JSONFileStorage<Champion>(context, "Champion") {
+class ChampionJSonFileStorage (context: Context) : JSONFileStorage<Champion>(context, "Champion") {
     override fun create(nom: String, obj: Champion): Champion {
         return Champion(nom, obj.description, obj.lCoup, obj.lCombo)
     }
@@ -44,10 +44,14 @@ import td.info507.tp_2xkodatasheet.storage.utility.file.JSONFileStorage
         return comboJson
     }
 
+
     fun listeCoupToJson(lcoup: ListeCoup): JSONArray {
         val jsonArray = JSONArray()
         for (coup in lcoup.lCoup) {
-            jsonArray.put(coupToJson(coup))
+            val wrapper = JSONObject()
+            wrapper.put("Coup", coupToJson(coup))
+
+            jsonArray.put(wrapper)
         }
         return jsonArray
     }
@@ -85,7 +89,7 @@ import td.info507.tp_2xkodatasheet.storage.utility.file.JSONFileStorage
     fun jsonToDescription(json: JSONObject):Description{
         return Description(
             json.getString(Description.DESCRIPTION),
-                json.getString(Description.VIDEO)
+            json.getString(Description.VIDEO)
         )
     }
 
@@ -104,9 +108,16 @@ import td.info507.tp_2xkodatasheet.storage.utility.file.JSONFileStorage
 
     fun jsonToListeCoup(json: JSONArray): ListeCoup{
         val lcoup = mutableListOf<Coup>()
-        repeat(json.length()) { coups ->
-            val coupArray = json.getJSONObject(coups)
-            lcoup.add(jsonToCoup(coupArray))
+        repeat(json.length()) { index ->
+            val item = json.getJSONObject(index)
+            val wrappedCoup = item.optJSONObject("Coup")
+            val coupJson = if (wrappedCoup != null) {
+                wrappedCoup
+            } else {
+                item
+            }
+
+            lcoup.add(jsonToCoup(coupJson))
         }
         return ListeCoup(lcoup)
     }

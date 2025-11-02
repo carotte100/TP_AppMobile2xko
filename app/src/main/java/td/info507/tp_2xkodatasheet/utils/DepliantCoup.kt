@@ -11,7 +11,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import td.info507.tp_2xkodatasheet.R
@@ -20,7 +19,6 @@ import td.info507.tp_2xkodatasheet.model.Champion
 @Composable
 fun DepliantCoup(modifier: Modifier, champion: Champion) {
     var isOpen by remember { mutableStateOf(false) }
-    val context = LocalContext.current
 
     Column (
         modifier = Modifier
@@ -44,7 +42,10 @@ fun DepliantCoup(modifier: Modifier, champion: Champion) {
                     .padding(12.dp)
             ) {
                 champion.lCoup.lCoup.forEach { coup ->
-                    Text(text = "• ${coup.nom} (${coup.type})", color = Color.LightGray)
+                    Text(
+                        text = "- ${coup.nom} (${coup.type})",
+                        color = Color.LightGray
+                    )
                 }
             }
         }
