@@ -11,6 +11,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Star
@@ -166,22 +167,30 @@ fun SearchBar(searchValue: String, onValueChange: (String) -> Unit) {
             )
         }
         Column {
-            Button(onClick = {
-                val intent = Intent(context, ProfileActivity::class.java)
-                val storage = ChampionJSonFileStorage(context)
-                val favoriteChampions = loadFavoriteChampions(context)
-                val json = org.json.JSONArray()
-
-                for (champion in favoriteChampions) {
-                    json.put(storage.objectToJson(champion.nom, champion))
-                }
-
-                intent.putExtra("champions_json", json.toString())
-                context.startActivity(intent)
-            }, shape = RoundedCornerShape(50)) {
+            Box(
+                modifier = Modifier
+                    .size(50.dp)
+                    .background(
+                        color = colorResource(R.color.bleu),
+                        shape = CircleShape
+                    )
+                    .clickable {
+                        val intent = Intent(context, ProfileActivity::class.java)
+                        val storage = ChampionJSonFileStorage(context)
+                        val favoriteChampions = loadFavoriteChampions(context)
+                        val json = org.json.JSONArray()
+                        for (champion in favoriteChampions) {
+                            json.put(storage.objectToJson(champion.nom, champion))
+                        }
+                        intent.putExtra("champions_json", json.toString())
+                        context.startActivity(intent)
+                    },
+                contentAlignment = Alignment.Center
+            ) {
                 Image(
                     painter = painterResource(R.drawable.user),
                     contentDescription = "Profile",
+                    modifier = Modifier.size(35.dp),
                 )
             }
         }
@@ -264,9 +273,17 @@ fun CharacterList(champions: List<Champion>, navController: NavController) {
                         .size(65.dp)
                         .background(
                             color = Color.LightGray,
-                            shape = RoundedCornerShape(50.dp)
+                            shape = RoundedCornerShape(
+                                topStart = 0.dp,
+                                topEnd = 50.dp,
+                                bottomEnd = 50.dp,
+                                bottomStart = 0.dp)
                         )
-                        .clip(RoundedCornerShape(50.dp))
+                        .clip(RoundedCornerShape(
+                            topStart = 0.dp,
+                            topEnd = 50.dp,
+                            bottomEnd = 50.dp,
+                            bottomStart = 0.dp))
                 ) {
 
                     Image(

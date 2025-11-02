@@ -13,7 +13,6 @@ fun saveFavoriteChampions(context: Context, favorites: List<Champion>) {
     val jsonArray = org.json.JSONArray()
 
     for (champion in favorites) {
-        // Utiliser objectToJson pour avoir le JSON complet correct
         val championJson = storage.objectToJson(champion.nom, champion)
         jsonArray.put(championJson)
     }

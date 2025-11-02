@@ -122,9 +122,11 @@ class ChampionJSonFileStorage (context: Context) : JSONFileStorage<Champion>(con
         return ListeCoup(lcoup)
     }
 
-    fun jsonToCoup(json: JSONObject): Coup{
+        fun jsonToCoup(json: JSONObject): Coup{
+
+        val coupJson = if (json.has("Coup")) json.getJSONObject("Coup") else json
         val icones = mutableListOf<String>()
-        val iconeArray = json.optJSONArray("Icone")
+        val iconeArray = coupJson.optJSONArray("Icone")
         if (iconeArray != null) {
             repeat(iconeArray.length()) { icone ->
                 icones.add(iconeArray.getString(icone))
@@ -132,7 +134,7 @@ class ChampionJSonFileStorage (context: Context) : JSONFileStorage<Champion>(con
         }
 
         val fData = mutableListOf<String>()
-        val fDataArray = json.optJSONArray("FrameData")
+        val fDataArray = coupJson.optJSONArray("FrameData")
         if (fDataArray != null) {
             repeat(fDataArray.length()) { data ->
                 fData.add(fDataArray.getString(data))
@@ -140,13 +142,13 @@ class ChampionJSonFileStorage (context: Context) : JSONFileStorage<Champion>(con
         }
 
         return Coup(
-            json.optString(Coup.TYPE, ""),
-            json.optString(Coup.NOM, ""),
-            json.optString(Coup.DESCRIPTION, ""),
+            coupJson.optString(Coup.TYPE, ""),
+            coupJson.optString(Coup.NOM, ""),
+            coupJson.optString(Coup.DESCRIPTION, ""),
             icones,
             fData
         )
     }
 
 
-}
+    }
