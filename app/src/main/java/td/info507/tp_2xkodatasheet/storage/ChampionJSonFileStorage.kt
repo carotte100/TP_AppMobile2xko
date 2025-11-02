@@ -16,7 +16,7 @@ import td.info507.tp_2xkodatasheet.storage.utility.file.JSONFileStorage
         return Champion(nom, obj.description, obj.lCoup, obj.lCombo)
     }
 
-    override fun objectToJson(nom: String, obj: Champion): JSONObject {
+    public override fun objectToJson(nom: String, obj: Champion): JSONObject {
         val json = JSONObject()
         json.put("Nom", obj.nom)
         json.put("Description",descriptionToJson(obj.description))
@@ -106,36 +106,36 @@ import td.info507.tp_2xkodatasheet.storage.utility.file.JSONFileStorage
         val lcoup = mutableListOf<Coup>()
         repeat(json.length()) { coups ->
             val coupArray = json.getJSONObject(coups)
-            val coup = coupArray.getJSONObject("Coup")
-            lcoup.add(jsonToCoup(coup))
+            lcoup.add(jsonToCoup(coupArray))
         }
         return ListeCoup(lcoup)
     }
 
     fun jsonToCoup(json: JSONObject): Coup{
         val icones = mutableListOf<String>()
-        val iconeArray = json.getJSONArray("Icone") ?: JSONArray()
-        repeat( iconeArray.length()){ icone ->
-            icones.add(iconeArray.getString(icone))
+        val iconeArray = json.optJSONArray("Icone")
+        if (iconeArray != null) {
+            repeat(iconeArray.length()) { icone ->
+                icones.add(iconeArray.getString(icone))
+            }
         }
 
         val fData = mutableListOf<String>()
-        val fDataArray = json.getJSONArray("FrameData") ?: JSONArray()
-        repeat( fDataArray.length()){ data ->
-            fData.add(fDataArray.getString(data))
+        val fDataArray = json.optJSONArray("FrameData")
+        if (fDataArray != null) {
+            repeat(fDataArray.length()) { data ->
+                fData.add(fDataArray.getString(data))
+            }
         }
+
         return Coup(
-            json.getString(Coup.TYPE),
-            json.getString(Coup.NOM),
-            json.getString(Coup.DESCRIPTION),
+            json.optString(Coup.TYPE, ""),
+            json.optString(Coup.NOM, ""),
+            json.optString(Coup.DESCRIPTION, ""),
             icones,
             fData
         )
     }
 
-
-        fun loadFromJsonString(jsonString: String): Map<String, Champion> {
-            return stringToData(jsonString)  // accessible ici car tu es dans la sous-classe
-        }
 
 }

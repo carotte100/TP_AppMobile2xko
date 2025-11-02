@@ -12,7 +12,12 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.outlined.StarBorder
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.*
@@ -37,16 +42,20 @@ import com.android.volley.Request
 import com.android.volley.RequestQueue
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.Volley
-import com.google.gson.Gson
 import org.json.JSONObject
 import td.info507.tp_2xkodatasheet.model.Champion
 import td.info507.tp_2xkodatasheet.storage.ChampionJSonFileStorage
+import td.info507.tp_2xkodatasheet.storage.loadFavoriteChampions
+import td.info507.tp_2xkodatasheet.storage.saveFavoriteChampions
 import td.info507.tp_2xkodatasheet.ui.theme.TP_2XKOdatasheetTheme
+
+
 
 class MainActivity : ComponentActivity() {
     private val jsonUrl = "http://51.68.91.213/gr-2-3/2XKO.json"
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
         super.onCreate(savedInstanceState)
 
         val storage = ChampionJSonFileStorage(this)
@@ -67,6 +76,7 @@ class MainActivity : ComponentActivity() {
                 Log.d("Volley", "Champions chargés : ${champions.map { c -> c.nom }}")
             }
         }
+
 
         setContent {
             TP_2XKOdatasheetTheme {
@@ -126,7 +136,6 @@ fun CharacterListScreen(champions: List<Champion>, navController: NavController)
     ) {
         SearchBar(
             searchValue = searchText,
-            champions,
             onValueChange = { newText ->
                 searchText = newText
             }
@@ -137,8 +146,9 @@ fun CharacterListScreen(champions: List<Champion>, navController: NavController)
 
 
 @Composable
-fun SearchBar(searchValue: String,champions: List<Champion>, onValueChange: (String) -> Unit) {
+fun SearchBar(searchValue: String, onValueChange: (String) -> Unit) {
     val context = LocalContext.current
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -158,9 +168,15 @@ fun SearchBar(searchValue: String,champions: List<Champion>, onValueChange: (Str
         Column {
             Button(onClick = {
                 val intent = Intent(context, ProfileActivity::class.java)
-                val gson = Gson()
-                val json = gson.toJson(champions) // ici, champions est ta liste complète ou tes favoris
-                intent.putExtra("champions_json", json)
+                val storage = ChampionJSonFileStorage(context)
+                val favoriteChampions = loadFavoriteChampions(context)
+                val json = org.json.JSONArray()
+
+                for (champion in favoriteChampions) {
+                    json.put(storage.objectToJson(champion.nom, champion))
+                }
+
+                intent.putExtra("champions_json", json.toString())
                 context.startActivity(intent)
             }, shape = RoundedCornerShape(50)) {
                 Text("Img")
@@ -172,6 +188,10 @@ fun SearchBar(searchValue: String,champions: List<Champion>, onValueChange: (Str
 @Composable
 fun CharacterList(champions: List<Champion>, navController: NavController) {
     val context = LocalContext.current // On récupère le context ici pour charger les images
+    var favoriteChampions by remember {
+        mutableStateOf(loadFavoriteChampions(context))
+    }
+
 
     LazyColumn(
         modifier = Modifier.padding(8.dp)
@@ -179,6 +199,8 @@ fun CharacterList(champions: List<Champion>, navController: NavController) {
         items(champions) { champion ->
             val imgName = champion.nom.lowercase()
             val imgResId = context.resources.getIdentifier(imgName, "drawable", context.packageName)
+            val isFavorite = favoriteChampions.any { it.nom == champion.nom }
+
 
             Row(
                 modifier = Modifier
@@ -207,6 +229,28 @@ fun CharacterList(champions: List<Champion>, navController: NavController) {
                         )
                         .padding(horizontal = 24.dp, vertical = 16.dp)
                 )
+
+                IconButton(
+                    onClick = {
+                        val updatedFavorites = if (isFavorite) {
+                            favoriteChampions.filterNot { it.nom == champion.nom }.toMutableList()
+                        } else {
+                            (favoriteChampions + champion).toMutableList()
+                        }
+
+                        favoriteChampions = updatedFavorites
+
+                        // Sauvegarde complète dans SharedPreferences
+                        saveFavoriteChampions(context, updatedFavorites)
+                    }
+                ) {
+                    Icon(
+                        imageVector = if (isFavorite) Icons.Filled.Star else Icons.Outlined.StarBorder,
+                        contentDescription = "Favori",
+                        tint = if (isFavorite) Color.Yellow else Color.Gray,
+                        modifier = Modifier.size(28.dp)
+                    )
+                }
 
                 // pousse a droite
                 Spacer(modifier = Modifier.weight(1f))

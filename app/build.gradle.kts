@@ -40,8 +40,8 @@ android {
 }
 
 dependencies {
+    implementation("androidx.compose.material:material-icons-extended:1.7.0")
     implementation("com.google.accompanist:accompanist-permissions:0.31.5-beta")
-    implementation("com.google.code.gson:gson:2.10.1")
     implementation("com.android.volley:volley:1.2.0")
     implementation("androidx.navigation:navigation-compose:2.7.3")
     implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.0")

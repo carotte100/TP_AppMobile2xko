@@ -1,10 +1,7 @@
 package td.info507.tp_2xkodatasheet
 
 import android.Manifest
-import android.content.Context
 import android.content.pm.PackageManager
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -62,20 +59,28 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 import td.info507.tp_2xkodatasheet.model.Champion
+import td.info507.tp_2xkodatasheet.storage.ChampionJSonFileStorage
+import td.info507.tp_2xkodatasheet.storage.loadImageFromInternalStorage
+import td.info507.tp_2xkodatasheet.storage.loadImagePath
+import td.info507.tp_2xkodatasheet.storage.loadPseudo
+import td.info507.tp_2xkodatasheet.storage.saveImagePath
+import td.info507.tp_2xkodatasheet.storage.saveImageToInternalStorage
+import td.info507.tp_2xkodatasheet.storage.savePseudo
 import td.info507.tp_2xkodatasheet.ui.theme.TP_2XKOdatasheetTheme
-import java.io.File
-import java.io.FileOutputStream
-
 
 class ProfileActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        val json = intent.getStringExtra("champions_json")
-        val gson = Gson()
-        val listType = object : TypeToken<List<Champion>>() {}.type
-        val champions: List<Champion> = gson.fromJson(json, listType)
+        val storage = ChampionJSonFileStorage(this)
+        val jsonString = intent.getStringExtra("champions_json") ?: "[]"
+        val jsonArray = org.json.JSONArray(jsonString)
+        val champions = mutableListOf<Champion>()
+
+        for (i in 0 until jsonArray.length()) {
+            val jsonObj = jsonArray.getJSONObject(i)
+            champions.add(storage.jsonToObject(jsonObj))
+        }
+
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
@@ -175,7 +180,7 @@ fun BackButton(onBack: () -> Unit) {
             contentPadding = PaddingValues(0.dp),
             modifier = Modifier
                 .size(40.dp)
-                .align(Alignment.TopEnd) // OK ici, car on est dans un Box scope
+                .align(Alignment.TopEnd)
         ) {
             Image(
                 painter = painterResource(R.drawable.cancel),
@@ -290,7 +295,7 @@ fun CameraButton(onImageCaptured: (ImageBitmap) -> Unit) {
 
 @Composable
 fun FavoriteList(champions: List<Champion>, navController: NavController) {
-    val context = LocalContext.current // On récupère le context ici pour charger les images
+    val context = LocalContext.current
 
     LazyColumn(
         modifier = Modifier.padding(8.dp)
@@ -353,37 +358,4 @@ fun FavoriteList(champions: List<Champion>, navController: NavController) {
             }
         }
     }
-}
-
-fun saveImageToInternalStorage(context: Context, bitmap: Bitmap, filename: String): String {
-    val file = File(context.filesDir, "$filename.png")
-    FileOutputStream(file).use { out ->
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
-    }
-    return file.absolutePath
-}
-
-fun loadImageFromInternalStorage(path: String): Bitmap? {
-    val file = File(path)
-    return if (file.exists()) BitmapFactory.decodeFile(file.absolutePath) else null
-}
-
-fun saveImagePath(context: Context, path: String) {
-    val prefs = context.getSharedPreferences("profile_prefs", Context.MODE_PRIVATE)
-    prefs.edit().putString("profile_image_path", path).apply()
-}
-
-fun loadImagePath(context: Context): String? {
-    val prefs = context.getSharedPreferences("profile_prefs", Context.MODE_PRIVATE)
-    return prefs.getString("profile_image_path", null)
-}
-
-fun savePseudo(context: Context, pseudo: String) {
-    val prefs = context.getSharedPreferences("profile_prefs", Context.MODE_PRIVATE)
-    prefs.edit().putString("user_pseudo", pseudo).apply()
-}
-
-fun loadPseudo(context: Context): String {
-    val prefs = context.getSharedPreferences("profile_prefs", Context.MODE_PRIVATE)
-    return prefs.getString("user_pseudo", "") ?: ""
 }
