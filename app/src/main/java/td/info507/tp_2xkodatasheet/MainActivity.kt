@@ -273,17 +273,9 @@ fun CharacterList(champions: List<Champion>, navController: NavController) {
                         .size(65.dp)
                         .background(
                             color = Color.LightGray,
-                            shape = RoundedCornerShape(
-                                topStart = 0.dp,
-                                topEnd = 50.dp,
-                                bottomEnd = 50.dp,
-                                bottomStart = 0.dp)
+                            shape = RoundedCornerShape(50.dp)
                         )
-                        .clip(RoundedCornerShape(
-                            topStart = 0.dp,
-                            topEnd = 50.dp,
-                            bottomEnd = 50.dp,
-                            bottomStart = 0.dp))
+                        .clip(RoundedCornerShape(50.dp))
                 ) {
 
                     Image(
